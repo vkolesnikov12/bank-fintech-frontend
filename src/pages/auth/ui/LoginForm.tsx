@@ -11,12 +11,40 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+import type { LoginFormValues } from "../model/types";
+import { loginSchema } from "../model/loginShema";
 
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>({
+    resolver: yupResolver(loginSchema),
+    defaultValues: {
+      identifier: "",
+      password: "",
+      remember: false,
+    },
+  });
+
+  const onSubmit = async (data: LoginFormValues) => {
+    console.log("LOGIN DATA", data);
+  };
+
   return (
-    <Box display="flex" flexDirection="column" gap={2}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      display="flex"
+      flexDirection="column"
+      gap={2}
+    >
       {/* Header */}
       <Box mb={1}>
         <Typography variant="h4" gutterBottom>
@@ -27,11 +55,14 @@ export const LoginForm = () => {
         </Typography>
       </Box>
 
-      {/* Email / Phone */}
+      {/* Identifier */}
       <TextField
         label="Email or phone"
         fullWidth
         placeholder="Enter your email or phone"
+        error={!!errors.identifier}
+        helperText={errors.identifier?.message}
+        {...register("identifier")}
       />
 
       {/* Password */}
@@ -40,6 +71,9 @@ export const LoginForm = () => {
         type={showPassword ? "text" : "password"}
         fullWidth
         placeholder="Enter your password"
+        error={!!errors.password}
+        helperText={errors.password?.message}
+        {...register("password")}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -55,11 +89,21 @@ export const LoginForm = () => {
       />
 
       {/* Remember me */}
-      <FormControlLabel control={<Checkbox />} label="Remember me" />
+      <FormControlLabel
+        control={<Checkbox {...register("remember")} />}
+        label="Remember me"
+      />
 
       {/* Submit */}
-      <Button variant="contained" size="large" fullWidth sx={{ mt: 1 }}>
-        Login
+      <Button
+        type="submit"
+        variant="contained"
+        size="large"
+        fullWidth
+        disabled={isSubmitting}
+        sx={{ mt: 1 }}
+      >
+        {isSubmitting ? "Signing in..." : "Login"}
       </Button>
 
       {/* Footer */}
