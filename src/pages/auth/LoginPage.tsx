@@ -1,9 +1,18 @@
-import { Box, Typography } from "@mui/material";
+import { Paper } from "@mui/material";
+import { LoginForm } from "./ui/LoginForm";
 
 export const LoginPage = () => {
   return (
-    <Box>
-      <Typography variant="h4">Login</Typography>
-    </Box>
+    <Paper
+      elevation={3}
+      sx={{
+        width: "100%",
+        maxWidth: 420,
+        p: 4,
+        borderRadius: 3,
+      }}
+    >
+      <LoginForm />
+    </Paper>
   );
 };
