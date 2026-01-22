@@ -12,7 +12,5 @@ Frontend приложение онлайн-банка.
 
 ## Запуск проекта
 
-```bash
 npm install
 npm run dev
-```
